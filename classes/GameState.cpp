@@ -7,8 +7,18 @@ void GameState::set_render_window(sf::RenderWindow *render_w)
 {
     this->rdw = render_w;
 }
- 
-sf::RenderWindow* GameState::get_render_window()
+
+void GameState::set_shapes(std::vector<sf::CircleShape> vshapes)
+{
+    this->vshapes = vshapes;
+}
+
+std::vector<sf::CircleShape> GameState::get_shapes()
+{
+    return this->vshapes;
+}
+
+sf::RenderWindow *GameState::get_render_window()
 {
     return this->rdw;
 }
