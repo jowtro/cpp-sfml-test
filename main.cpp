@@ -7,11 +7,12 @@ const unsigned int WIDTH {800}, HEIGHT{600};
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Example", sf::Style::Titlebar);
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
+    sf::RectangleShape cell(sf::Vector2f(10.0f,10.0f));
+    cell.setFillColor(sf::Color::Green);
 
     while (window.isOpen())
     {
+        window.setFramerateLimit(30);
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -20,7 +21,7 @@ int main()
         }
 
         window.clear();
-        window.draw(shape);
+        window.draw(cell);
         window.display();
     }
 
