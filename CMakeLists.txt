@@ -18,8 +18,8 @@ FetchContent_Declare(
 add_executable(
  SfmlWithCMake
  main.cpp
- classes/GameState.cpp
 )
+
 target_link_libraries(
  SfmlWithCMake
  sfml-graphics
