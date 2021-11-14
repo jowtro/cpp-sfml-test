@@ -2,7 +2,11 @@
 #include <stdlib.h> /* srand, rand */
 #include <time.h>   /* time */
 #include <SFML/Graphics.hpp>
+#include <SFML/Window/WindowHandle.hpp>
 #include <random>
+#include <iostream>
+#include <random>
+#include <memory>
 //#include "./classes/GameState.h"
 
 const unsigned short WIDTH{800};
@@ -12,62 +16,115 @@ using namespace sf;
 
 int main()
 {
-    std::vector<CircleShape> shapes_list;
-    int iSecret, icolor, iGuess;
-    float rsize;
-    float x, y;
-    rsize = (float(rand()) / float((RAND_MAX)) * 100);
+  //sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Bouncing ball.");
+  sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Example", sf::Style::Titlebar);
+  /* initialize random seed: */
+  srand(time(NULL));
+  int x_r{rand() % WIDTH - 128 + 1};
+  srand(time(NULL));
+  int y_r{rand() % HEIGHT - 128 + 1};
 
-    srand(time(NULL));
-    /* generate secret number between 1 and 10: */
-    rsize = rand() % 100;
-    
-    CircleShape teste(rsize);
-    teste.setPosition(WIDTH/2,HEIGHT/2);
-    
-    shapes_list.push_back(teste);
-    
-    CircleShape b(rsize);
-    shapes_list.push_back(b);
+  sf::Texture ball_texture;
+  ball_texture.loadFromFile("ball.png");
+  sf::Sprite ball_spr(ball_texture);
+  sf::Vector2u bsize = ball_texture.getSize();
+  ball_spr.setOrigin(sf::Vector2f(bsize.x / 2, bsize.y / 2));
 
-    Color colors_shapes[] = {Color::Magenta,
-                             Color::Red,
-                             Color::Blue};
-    RenderWindow window(VideoMode(WIDTH, HEIGHT), "SFML works!");
-    window.setVerticalSyncEnabled(70); // call it once, after creating the window
-    while (window.isOpen())
+  ball_spr.setPosition(x_r, y_r);
+  window.setVerticalSyncEnabled(30);
+  float speed{5.0f};
+  float x_drag{0.02f};
+  float gravity{0.98f};
+  float x_speed{3.0f};
+  float y_speed{5.0f};
+  float losing_energy{0.1f};
+  float ball_x_pos{0.0f};
+  float ball_y_pos{0.0f};
+  sf::FloatRect col_cursor(0.f,0.f,0.f,0.f);
+  
+  while (window.isOpen())
+  {
+    sf::Event event;
+    while (window.pollEvent(event))
     {
-        Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == Event::Closed)
-                window.close();
-        }
-        for (CircleShape &shape : shapes_list)
-        {
-            /* initialize random seed: */
-            srand(time(NULL));
-            float x_r, y_r;
-            x_r = rand() % WIDTH;
-            y_r = rand() % HEIGHT;
-            shape.setPosition(x_r, y_r);
-        }
+      if (event.type == sf::Event::Closed)
+      {
+        window.close();
+      }
+      if (event.type == sf::Event::MouseButtonPressed)
+      {
+        float m_x = sf::Mouse::getPosition(window).x;
+        float m_y = sf::Mouse::getPosition(window).y;
+        sf::Vector2f localPosition{m_x, m_y};
+        sf::Vector2f cursor_size{20, 20};
+        sf::FloatRect aux(localPosition,cursor_size);
+        col_cursor = aux;
 
-        for (CircleShape &shape : shapes_list)
-        {
-            window.clear();
-            srand(time(NULL));
-
-            /* generate secret number between 1 and x: */
-            icolor = rand() % 3;
-            iSecret = rand() % 3;
-
-            shape.setFillColor(colors_shapes[icolor]);
-            shape.move(0.2f, 0.2f);
-            window.draw(shape);
-        }
-        window.display();
+        std::cout << "cursor >" << localPosition.x << " " << localPosition.y << std::endl;
+        std::cout << "ball >" << ball_spr.getPosition().x << " " << ball_spr.getPosition().y << std::endl; 
+      }
     }
 
-    return 0;
+    window.clear(sf::Color(16, 16, 16, 255)); // Dark gray.
+    ball_x_pos = ball_spr.getPosition().x + bsize.x * 0.5;
+    ball_y_pos = ball_spr.getPosition().y + bsize.y * 0.5;
+
+    if (ball_x_pos > window.getSize().x || ball_x_pos < 0)
+    {
+      x_speed *= -1;
+      x_drag *= -1;
+    }
+
+    if (losing_energy > 0 && ball_y_pos > window.getSize().y || ball_y_pos < 0)
+    {
+      losing_energy += 0.5f;
+
+      if (losing_energy > 4)
+      {
+        y_speed = 0;
+        losing_energy = 0.0f;
+      }
+      else
+      {
+        y_speed *= -1;
+        y_speed += losing_energy;
+      }
+      // ball_spr.setPosition(ball_spr.getPosition().x, window.getSize().y + bsize.x / 2);
+    }
+    else
+    {
+      if (losing_energy > 4)
+      {
+        y_speed = 0;
+        losing_energy = 0;
+      }
+      else if (losing_energy != 0)
+      {
+        y_speed += gravity + losing_energy;
+      }
+    }
+
+    // pretends to be air friction
+    if (x_speed > 0)
+    {
+      x_speed -= x_drag;
+    }
+    else if (x_speed != 0)
+    {
+      x_speed = 0.0f;
+    }
+
+    std::cout << col_cursor.intersects(ball_spr.getGlobalBounds()) << std::endl;
+    
+    if (col_cursor.intersects(ball_spr.getGlobalBounds()))
+    {
+      std::cout << "Inside Ball sprite!" << std::endl;
+    }
+
+    ball_spr.move(x_speed, y_speed);
+
+    window.draw(ball_spr); // Drawing our sprite.
+    window.display();
+  }
+  return 0;
 }
