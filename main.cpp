@@ -1,14 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/WindowHandle.hpp>
 
-
-const unsigned int WIDTH {800}, HEIGHT{600};
+#include "classes/Field.cpp"
 
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Example", sf::Style::Titlebar);
-    sf::RectangleShape cell(sf::Vector2f(10.0f,10.0f));
-    cell.setFillColor(sf::Color::Green);
+    jx::Field field;
 
     while (window.isOpen())
     {
@@ -21,7 +19,8 @@ int main()
         }
 
         window.clear();
-        window.draw(cell);
+        //pass by reference window in order to draw inside the field class
+        field.draw_field(window);
         window.display();
     }
 
