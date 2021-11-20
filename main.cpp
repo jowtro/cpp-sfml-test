@@ -40,8 +40,9 @@ int main()
   float losing_energy{0.1f};
   float ball_x_pos{0.0f};
   float ball_y_pos{0.0f};
-  sf::FloatRect col_cursor(0.f,0.f,0.f,0.f);
-  
+  sf::Vector2f localPosition;
+  sf::FloatRect col_cursor(0.f, 0.f, 0.f, 0.f);
+  bool hold_click = false;
   while (window.isOpen())
   {
     sf::Event event;
@@ -51,17 +52,18 @@ int main()
       {
         window.close();
       }
-      if (event.type == sf::Event::MouseButtonPressed)
+      if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
       {
         float m_x = sf::Mouse::getPosition(window).x;
         float m_y = sf::Mouse::getPosition(window).y;
-        sf::Vector2f localPosition{m_x, m_y};
+        localPosition = sf::Vector2f(m_x, m_y);
         sf::Vector2f cursor_size{20, 20};
-        sf::FloatRect aux(localPosition,cursor_size);
+        sf::FloatRect aux(localPosition, cursor_size);
         col_cursor = aux;
 
         std::cout << "cursor >" << localPosition.x << " " << localPosition.y << std::endl;
-        std::cout << "ball >" << ball_spr.getPosition().x << " " << ball_spr.getPosition().y << std::endl; 
+        std::cout << "ball >" << ball_spr.getPosition().x << " " << ball_spr.getPosition().y << std::endl;
+        hold_click = true;
       }
     }
 
@@ -89,7 +91,6 @@ int main()
         y_speed *= -1;
         y_speed += losing_energy;
       }
-      // ball_spr.setPosition(ball_spr.getPosition().x, window.getSize().y + bsize.x / 2);
     }
     else
     {
@@ -114,11 +115,10 @@ int main()
       x_speed = 0.0f;
     }
 
-    std::cout << col_cursor.intersects(ball_spr.getGlobalBounds()) << std::endl;
-    
-    if (col_cursor.intersects(ball_spr.getGlobalBounds()))
+    if (col_cursor.intersects(ball_spr.getGlobalBounds()) && hold_click)
     {
       std::cout << "Inside Ball sprite!" << std::endl;
+      ball_spr.setPosition(localPosition);
     }
 
     ball_spr.move(x_speed, y_speed);
