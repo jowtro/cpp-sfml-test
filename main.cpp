@@ -11,8 +11,25 @@
 
 const unsigned short WIDTH{800};
 const unsigned short HEIGHT{600};
+float speed{5.0f};
+float x_drag{0.02f};
+float gravity{0.98f};
+float x_speed{3.0f};
+float y_speed{5.0f};
+float losing_energy{0.1f};
+float ball_x_pos{0.0f};
+float ball_y_pos{0.0f};
+sf::Vector2f localPosition;
+sf::FloatRect col_cursor(0.f, 0.f, 0.f, 0.f);
 
 using namespace sf;
+
+void reset()
+{
+  speed = 5.0f;
+  y_speed = 5.0f;
+  losing_energy = {0.1f}; 
+}
 
 int main()
 {
@@ -32,17 +49,9 @@ int main()
 
   ball_spr.setPosition(x_r, y_r);
   window.setVerticalSyncEnabled(30);
-  float speed{5.0f};
-  float x_drag{0.02f};
-  float gravity{0.98f};
-  float x_speed{3.0f};
-  float y_speed{5.0f};
-  float losing_energy{0.1f};
-  float ball_x_pos{0.0f};
-  float ball_y_pos{0.0f};
-  sf::Vector2f localPosition;
-  sf::FloatRect col_cursor(0.f, 0.f, 0.f, 0.f);
+
   bool hold_click = false;
+
   while (window.isOpen())
   {
     sf::Event event;
@@ -65,11 +74,18 @@ int main()
         std::cout << "ball >" << ball_spr.getPosition().x << " " << ball_spr.getPosition().y << std::endl;
         hold_click = true;
       }
+
+      if (event.type == sf::Event::MouseButtonReleased)
+      {
+        hold_click = false;
+        reset();
+      }
     }
 
     window.clear(sf::Color(16, 16, 16, 255)); // Dark gray.
     ball_x_pos = ball_spr.getPosition().x + bsize.x * 0.5;
     ball_y_pos = ball_spr.getPosition().y + bsize.y * 0.5;
+
 
     if (ball_x_pos > window.getSize().x || ball_x_pos < 0)
     {
