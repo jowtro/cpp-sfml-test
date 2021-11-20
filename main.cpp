@@ -8,6 +8,7 @@
 #include <random>
 #include <memory>
 //#include "./classes/GameState.h"
+using namespace sf;
 
 const unsigned short WIDTH{800};
 const unsigned short HEIGHT{600};
@@ -19,39 +20,106 @@ float y_speed{5.0f};
 float losing_energy{0.1f};
 float ball_x_pos{0.0f};
 float ball_y_pos{0.0f};
+bool hold_click = false;
+sf::Sprite ball_spr;
 sf::Vector2f localPosition;
 sf::FloatRect col_cursor(0.f, 0.f, 0.f, 0.f);
+sf::Vector2u bsize;
 
-using namespace sf;
-
-void reset()
+void init()
 {
-  speed = 5.0f;
-  y_speed = 5.0f;
-  losing_energy = {0.1f}; 
-}
-
-int main()
-{
-  //sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Bouncing ball.");
-  sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Example", sf::Style::Titlebar);
-  /* initialize random seed: */
   srand(time(NULL));
   int x_r{rand() % WIDTH - 128 + 1};
   srand(time(NULL));
   int y_r{rand() % HEIGHT - 128 + 1};
 
-  sf::Texture ball_texture;
-  ball_texture.loadFromFile("ball.png");
-  sf::Sprite ball_spr(ball_texture);
-  sf::Vector2u bsize = ball_texture.getSize();
   ball_spr.setOrigin(sf::Vector2f(bsize.x / 2, bsize.y / 2));
-
   ball_spr.setPosition(x_r, y_r);
+}
+
+void reset()
+{
+  speed = 5.0f;
+  y_speed = 5.0f;
+  losing_energy = {0.1f};
+}
+
+void update(sf::RenderWindow *wnd_ptr)
+{
+  if (ball_x_pos > wnd_ptr->getSize().x || ball_x_pos < 0)
+  {
+    x_speed *= -1;
+    x_drag *= -1;
+  }
+
+  if (losing_energy > 0 && ball_y_pos > wnd_ptr->getSize().y || ball_y_pos < 0)
+  {
+
+    if (losing_energy > 4)
+    {
+      y_speed = 0;
+      losing_energy = 0.0f;
+    }
+    else
+    {
+      losing_energy += 0.5f;
+      y_speed *= -1;
+      y_speed += losing_energy;
+    }
+  }
+  else
+  {
+    if (losing_energy > 4)
+    {
+      y_speed = 0;
+      losing_energy = 0;
+    }
+    else if (losing_energy != 0)
+    {
+      y_speed += gravity + losing_energy;
+    }
+  }
+
+  // pretends to be air friction
+  if (x_speed > 0)
+  {
+    x_speed -= x_drag;
+  }
+  else if (x_speed != 0)
+  {
+    x_speed = 0.0f;
+  }
+
+  if (col_cursor.intersects(ball_spr.getGlobalBounds()) && hold_click)
+  {
+    ball_spr.setPosition(localPosition);
+  }
+}
+
+void draw(sf::RenderWindow *wdn_ptr)
+{
+  ball_x_pos = ball_spr.getPosition().x + bsize.x * 0.5;
+  ball_y_pos = ball_spr.getPosition().y + bsize.y * 0.5;
+
+  ball_spr.move(x_speed, y_speed);
+
+  wdn_ptr->draw(ball_spr); // Drawing our sprite.
+}
+
+int main()
+{
+  sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Example", sf::Style::Titlebar);
+  //load texture
+  sf::Texture texture;
+  texture.loadFromFile("ball.png");
+  ball_spr.setTexture(texture);
+  bsize = sf::Vector2u(texture.getSize());
+
   window.setVerticalSyncEnabled(30);
 
-  bool hold_click = false;
+  init();
 
+#pragma region Events
   while (window.isOpen())
   {
     sf::Event event;
@@ -81,65 +149,14 @@ int main()
         reset();
       }
     }
+#pragma endregion end of events
+
+    update(&window);
 
     window.clear(sf::Color(16, 16, 16, 255)); // Dark gray.
-    ball_x_pos = ball_spr.getPosition().x + bsize.x * 0.5;
-    ball_y_pos = ball_spr.getPosition().y + bsize.y * 0.5;
 
+    draw(&window);
 
-    if (ball_x_pos > window.getSize().x || ball_x_pos < 0)
-    {
-      x_speed *= -1;
-      x_drag *= -1;
-    }
-
-    if (losing_energy > 0 && ball_y_pos > window.getSize().y || ball_y_pos < 0)
-    {
-      losing_energy += 0.5f;
-
-      if (losing_energy > 4)
-      {
-        y_speed = 0;
-        losing_energy = 0.0f;
-      }
-      else
-      {
-        y_speed *= -1;
-        y_speed += losing_energy;
-      }
-    }
-    else
-    {
-      if (losing_energy > 4)
-      {
-        y_speed = 0;
-        losing_energy = 0;
-      }
-      else if (losing_energy != 0)
-      {
-        y_speed += gravity + losing_energy;
-      }
-    }
-
-    // pretends to be air friction
-    if (x_speed > 0)
-    {
-      x_speed -= x_drag;
-    }
-    else if (x_speed != 0)
-    {
-      x_speed = 0.0f;
-    }
-
-    if (col_cursor.intersects(ball_spr.getGlobalBounds()) && hold_click)
-    {
-      std::cout << "Inside Ball sprite!" << std::endl;
-      ball_spr.setPosition(localPosition);
-    }
-
-    ball_spr.move(x_speed, y_speed);
-
-    window.draw(ball_spr); // Drawing our sprite.
     window.display();
   }
   return 0;
