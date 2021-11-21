@@ -6,7 +6,7 @@
 
 void jx::Field::draw_field(sf::RenderWindow &ref_wnd, grd::Grid &grid)
 {
-
+    vector<vector<int>> &grid_vec = grid.get_grid();
     for (size_t x = 0; x < ROWS; x++)
     {
         for (size_t y = 0; y < COLUMNS; y++)
@@ -18,7 +18,7 @@ void jx::Field::draw_field(sf::RenderWindow &ref_wnd, grd::Grid &grid)
             sf::Vector2f cursor_size(1.0f, 1.0f);
 
             sf::FloatRect cursor(localPosition, cursor_size);
-
+            
             if (cell.getGlobalBounds().intersects(cursor) && mouse_state == 1)
             {
                 //Clicked inside the cell: set color to red
@@ -28,6 +28,10 @@ void jx::Field::draw_field(sf::RenderWindow &ref_wnd, grd::Grid &grid)
             else
             {
                 cell.setFillColor(sf::Color::Green);
+            }
+            
+            if(grid_vec[x][y] == 1){
+                cell.setFillColor(sf::Color::Blue);
             }
             ref_wnd.draw(cell);
         }
