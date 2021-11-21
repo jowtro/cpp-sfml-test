@@ -1,4 +1,5 @@
 #pragma once
+#include <SFML/Graphics.hpp>
 
 const int CELL_SIZE = 15;
 const unsigned int WIDTH {200}, HEIGHT{200};

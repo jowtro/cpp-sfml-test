@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Global.hpp"
+#include "../Global.hpp"
 #include "Field.hpp"
 
 void jx::Field::draw_field(sf::RenderWindow &ref_wnd)

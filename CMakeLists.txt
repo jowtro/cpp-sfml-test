@@ -1,13 +1,9 @@
 include(FetchContent)
 
 cmake_minimum_required(VERSION 3.21)
-project(cpp-basic-template VERSION 0.1.0)
-
-include(CTest)
-enable_testing()
+project(myProgram VERSION 0.1.0)
 
 
-set(BUILD_SHARED_LIBS OFF)
 FetchContent_Declare(
     SFML
     GIT_REPOSITORY https://github.com/SFML/SFML.git
@@ -16,12 +12,13 @@ FetchContent_Declare(
     FetchContent_MakeAvailable(SFML)
     
 add_executable(
- SfmlWithCMake
+    myProgram
+ classes/Field.cpp
  main.cpp
 )
 
 target_link_libraries(
- SfmlWithCMake
+    myProgram
  sfml-graphics
 )
 

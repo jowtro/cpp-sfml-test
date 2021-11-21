@@ -1,8 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/WindowHandle.hpp>
 
-#include "classes/Field.cpp"
-
+#include "Global.hpp"
+#include "classes/Field.hpp"
 
 int main()
 {
