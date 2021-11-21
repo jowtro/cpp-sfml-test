@@ -13,15 +13,15 @@ FetchContent_Declare(
     
 add_executable(
     myProgram
- classes/Field.cpp
- main.cpp
+ classes/Field.cc
+ main.cc
 )
 
 target_link_libraries(
     myProgram
  sfml-graphics
 )
-
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
+set(EXECUTABLE_OUTPUT_PATH "../bin")
