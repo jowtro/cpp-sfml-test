@@ -1,8 +1,10 @@
 #include <iostream>
+#include <vector>
 #include "../Global.hpp"
 #include "Field.hpp"
+#include "Grid.hpp"
 
-void jx::Field::draw_field(sf::RenderWindow &ref_wnd)
+void jx::Field::draw_field(sf::RenderWindow &ref_wnd, grd::Grid &grid)
 {
 
     for (size_t x = 0; x < ROWS; x++)
@@ -11,15 +13,17 @@ void jx::Field::draw_field(sf::RenderWindow &ref_wnd)
         {
             sf::RectangleShape cell(sf::Vector2f(CELL_SIZE - 1, CELL_SIZE - 1));
             cell.setPosition(CELL_SIZE * x, CELL_SIZE * y);
-            
+
             sf::Vector2f localPosition(m_pos);
-            sf::Vector2f cursor_size(1.0f,1.0f);
+            sf::Vector2f cursor_size(1.0f, 1.0f);
 
             sf::FloatRect cursor(localPosition, cursor_size);
 
             if (cell.getGlobalBounds().intersects(cursor) && mouse_state == 1)
             {
+                //Clicked inside the cell: set color to red
                 cell.setFillColor(sf::Color::Red);
+                grid.set_cell(x, y, 1);
             }
             else
             {

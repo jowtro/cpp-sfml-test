@@ -14,6 +14,7 @@ FetchContent_Declare(
 add_executable(
     myProgram
  classes/Field.cc
+ classes/Grid.cc
  main.cc
 )
 

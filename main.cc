@@ -1,19 +1,24 @@
+#include <string>
 #include <iostream>
+#include <vector>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/WindowHandle.hpp>
 
 #include "Global.hpp"
+#include "classes/Grid.hpp"
 #include "classes/Field.hpp"
 
 sf::Font font;
-
-int init()
+grd::Grid grid;
+std::vector<vector<int>> grid_vec_ptr;
+void init()
 {
   if (!font.loadFromFile("./DroidSansMono.ttf"))
   {
     std::cerr << ".Error while loading font" << std::endl;
-    return -1;
   }
+  //init Grid data
+  grid.gen_grid(ROWS, COLUMNS);
 }
 
 int main()
@@ -31,6 +36,14 @@ int main()
       if (event.type == sf::Event::Closed)
         window.close();
 
+      if (event.type == sf::Event::KeyPressed)
+      {
+        if (event.key.code == sf::Keyboard::Space)
+        {
+          grid.display_grid();
+        }
+      }
+
       if (event.type == sf::Event::MouseButtonPressed)
       {
 
@@ -45,18 +58,21 @@ int main()
     }
 
     window.clear();
+
+    //FIELD
     field.set_mouse_data(md);
     //pass by reference window in order to draw inside the field class
-    field.draw_field(window);
+    field.draw_field(window, grid);
+    //END FIELD
 
     // Declare and load a font
-    // Create a text
-    sf::Text text("hello", font);
+    sf::Text text("mx " + std::to_string(md.pos.x) + " my " + std::to_string(md.pos.y), font);
     text.setCharacterSize(30);
     text.setStyle(sf::Text::Bold);
     text.setCharacterSize(24); // in pixels, not points!
     text.setPosition(WIDTH / 2, HEIGHT / 2);
     text.setFillColor(sf::Color::Red);
+
     // Draw it
     window.draw(text);
 
