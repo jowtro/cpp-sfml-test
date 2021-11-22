@@ -7,7 +7,10 @@
 #include "Global.hpp"
 #include "classes/Grid.hpp"
 #include "classes/Field.hpp"
-
+#include <algorithm>
+#include <iomanip>
+#include <ctime>
+#include <chrono>
 sf::Font font;
 grd::Grid grid;
 std::vector<vector<int>> grid_vec_ptr;
@@ -75,6 +78,7 @@ int main()
 
     // Draw it
     window.draw(text);
+    grid.update_virus();
 
     window.display();
   }
