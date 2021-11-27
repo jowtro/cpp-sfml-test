@@ -16,12 +16,11 @@ FetchContent_Declare(
     FetchContent_MakeAvailable(SFML)
     
 add_executable(
- SfmlWithCMake
+ colony
  main.cpp
- classes/GameState.cpp
 )
 target_link_libraries(
- SfmlWithCMake
+ colony
  sfml-graphics
 )
 
