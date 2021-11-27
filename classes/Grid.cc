@@ -1,5 +1,6 @@
 #include "Grid.hpp"
 #include <iostream>
+#include <string>
 
 using namespace grd;
 
@@ -7,22 +8,21 @@ vector<vector<int>> &grd::Grid::get_grid()
 {
     return grid;
 }
-void grd::Grid::set_cell(int x, int y, int val)
+void grd::Grid::set_cell(int y, int x, int val)
 {
-    grid[x][y] = val;
+    grid[y][x] = val;
 }
 
-void grd::Grid::gen_grid(int rows, int columns)
+void grd::Grid::gen_grid(int columns, int rows)
 {
     // Initializing the vector of vectors
     vector<vector<int>> vec;
+    // Vector to store column elements
     // Inserting elements into vector
-    for (int i = 0; i < rows; i++)
+    for (int i = 0; i < columns; i++)
     {
-        // Vector to store column elements
         vector<int> v1;
-
-        for (int j = 0; j < columns; j++)
+        for (int j = 0; j < rows; j++)
         {
             v1.push_back(0);
         }
@@ -36,40 +36,30 @@ void grd::Grid::gen_grid(int rows, int columns)
 
 void grd::Grid::display_grid()
 {
-
+    printf("Grid Size: %u \n",grid.size());
     // Displaying the 2D vector
-    for (int i = 0; i < grid.size(); i++)
+     for (int y = 0; y < grid.size(); y++)
     {
-        for (int j = 0; j < grid[i].size(); j++)
-            std::cout << grid[i][j] << " ";
-        std::cout << endl;
+        for (int x = 0; x < grid[y].size(); x++)
+        {
+            std::cout << grid[y][x] << " ";
+        }
+        std::cout << std::endl;
     }
 }
 
+/**
+ * @brief Animation effect
+ * 
+ */
 void Grid::update_virus()
 {
-    for (int x = 0; x < grid.size(); x++)
-    {
-        for (int y = 0; y < grid[x].size(); y++)
-        {
-            //FIXME add exception
-            // paint all cells to the left
-            if (x - 1 >= 0)
-            {
-                if (grid[x - 1][y] == 1)
-                    grid[x - 1][y] = 1;
-
-                if (grid[x][y - 1] == 1)
-                    grid[x - 1][y] = 1;
-
-                if (grid[x - 1][y - 1] == 1)
-                    grid[x - 1][y - 1] = 1;
-
-                if (grid[x][y - 1] == 1)
-                    grid[x - 1][y - 1] = 1;
-            }
-        }
-    }
+    // for (int y = 0; y < grid.size(); y++)
+    // {
+    //     for (int x = 0; x < grid[y].size(); x++)
+    //     {
+    //     }
+    // }
 }
 
 grd::Grid::Grid()

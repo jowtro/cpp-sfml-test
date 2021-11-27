@@ -1,10 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-const int CELL_SIZE = 15;
-const unsigned int WIDTH {800}, HEIGHT{600};
+const int CELL_SIZE = 100;
+const unsigned int WIDTH {800}, HEIGHT{800};
 const int COLUMNS = WIDTH / CELL_SIZE;
-const int ROWS = (HEIGHT-50) / CELL_SIZE;
+const int ROWS = HEIGHT / CELL_SIZE;
 
 struct mouse_data
 {

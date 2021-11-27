@@ -10,7 +10,6 @@ namespace grd
 
     private:
         vector<vector<int>> grid;
-
     public:
         void set_cell(int x, int y, int val);
         void gen_grid(int rows, int columns);

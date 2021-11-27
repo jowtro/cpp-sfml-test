@@ -7,9 +7,9 @@
 void jx::Field::draw_field(sf::RenderWindow &ref_wnd, grd::Grid &grid)
 {
     vector<vector<int>> &grid_vec = grid.get_grid();
-    for (size_t x = 0; x < ROWS; x++)
+    for (size_t y = 0; y < COLUMNS; y++)
     {
-        for (size_t y = 0; y < COLUMNS; y++)
+        for (size_t x = 0; x < ROWS; x++)
         {
             sf::RectangleShape cell(sf::Vector2f(CELL_SIZE - 1, CELL_SIZE - 1));
             cell.setPosition(CELL_SIZE * x, CELL_SIZE * y);
@@ -23,14 +23,14 @@ void jx::Field::draw_field(sf::RenderWindow &ref_wnd, grd::Grid &grid)
             {
                 //Clicked inside the cell: set color to red
                 cell.setFillColor(sf::Color::Red);
-                grid.set_cell(x, y, 1);
+                grid.set_cell(y, x, 1);
             }
             else
             {
                 cell.setFillColor(sf::Color::White);
             }
             
-            if(grid_vec[x][y] == 1){
+            if(grid_vec[y][x] == 1){
                 cell.setFillColor(sf::Color::Blue);
             }
             ref_wnd.draw(cell);

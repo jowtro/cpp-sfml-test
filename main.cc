@@ -21,7 +21,7 @@ void init()
     std::cerr << ".Error while loading font" << std::endl;
   }
   //init Grid data
-  grid.gen_grid(ROWS, COLUMNS);
+  grid.gen_grid(COLUMNS,ROWS);
 }
 
 int main()
