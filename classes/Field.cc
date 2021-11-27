@@ -27,7 +27,7 @@ void jx::Field::draw_field(sf::RenderWindow &ref_wnd, grd::Grid &grid)
             }
             else
             {
-                cell.setFillColor(sf::Color::Green);
+                cell.setFillColor(sf::Color::White);
             }
             
             if(grid_vec[x][y] == 1){
