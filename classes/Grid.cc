@@ -48,22 +48,25 @@ void grd::Grid::display_grid()
 
 void Grid::update_virus()
 {
-    for (int i = 0; i < grid.size(); i++)
+    for (int x = 0; x < grid.size(); x++)
     {
-        for (int j = 0; j < grid[i].size(); j++)
+        for (int y = 0; y < grid[x].size(); y++)
         {
             //FIXME add exception
             // paint all cells to the left
-            if (i - 1 >= 0)
+            if (x - 1 >= 0)
             {
-                if (grid[i - 1][j] == 1)
-                    grid[i - 1][j] = 1;
+                if (grid[x - 1][y] == 1)
+                    grid[x - 1][y] = 1;
 
-                if (grid[i - 1][j - 1] == 1)
-                    grid[i - 1][j - 1] = 1;
+                if (grid[x][y - 1] == 1)
+                    grid[x - 1][y] = 1;
 
-                if (grid[i][j - 1] == 1)
-                    grid[i - 1][j - 1] = 1;
+                if (grid[x - 1][y - 1] == 1)
+                    grid[x - 1][y - 1] = 1;
+
+                if (grid[x][y - 1] == 1)
+                    grid[x - 1][y - 1] = 1;
             }
         }
     }
