@@ -36,9 +36,9 @@ void grd::Grid::gen_grid(int columns, int rows)
 
 void grd::Grid::display_grid()
 {
-    printf("Grid Size: %u \n",grid.size());
+    printf("Grid Size: %u \n", grid.size());
     // Displaying the 2D vector
-     for (int y = 0; y < grid.size(); y++)
+    for (int y = 0; y < grid.size(); y++)
     {
         for (int x = 0; x < grid[y].size(); x++)
         {
@@ -54,12 +54,51 @@ void grd::Grid::display_grid()
  */
 void Grid::update_virus()
 {
-    // for (int y = 0; y < grid.size(); y++)
-    // {
-    //     for (int x = 0; x < grid[y].size(); x++)
-    //     {
-    //     }
-    // }
+    for (int y = 0; y < grid.size(); y++)
+    {
+        for (int x = 0; x < grid[y].size(); x++)
+        {
+            if (y > 1 && grid[y - 1][x - 1] == 1)
+            {
+                if (y > 1)
+                    grid[y - 1][x] = 1;
+            }
+            if (y > 1 && grid[y - 1][x] == 1)
+            {
+                if (x > 1)
+                    grid[y][x - 1] = 1;
+            }
+            if (x > 1 && grid[y][x - 1] == 1)
+            {
+                if (y < grid.size() - 1 && x < grid.size() - 1)
+                    grid[y + 1][x + 1] = 1;
+            }
+            if (y < grid.size() - 1 && x > grid.size() && grid[y + 1][x + 1] == 1)
+            {
+                if (y < grid.size() - 1 && x > 1)
+                    grid[y + 1][x - 1] = 1;
+            }
+
+            if (y < grid.size() - 1 && x > 1 && grid[y + 1][x - 1] == 1)
+            {
+                if (x < grid.size() - 1)
+                    grid[y][x + 1] = 1;
+            }
+            if (x < grid.size() - 1 && grid[y][x + 1] == 1)
+            {
+                if (y > 1)
+                    grid[y - 1][x] = 1;
+            }
+            if (y > 1 && grid[y - 1][x] == 1)
+            {
+                if (y > 1 && x > 1)
+                    grid[y - 1][x - 1] = 1;
+            }
+            // if (y < grid.size() - 1 && grid[y + 1][x] == 1)
+            // {
+            // }
+        }
+    }
 }
 
 grd::Grid::Grid()
